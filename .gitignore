@@ -41,6 +41,3 @@
 *.su
 *.idb
 *.pdb
-
-# Default build dir
-build/
