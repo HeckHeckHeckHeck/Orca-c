@@ -17,7 +17,7 @@ fprintf(stderr,
 "    -h or --help  Print this message and exit.\n"
 );} // clang-format on
 
-int main(int argc, char **argv)
+/*int main(int argc, char **argv)
 {
     static struct option cli_options[] = { { "help", no_argument, 0, 'h' },
                                            { "quiet", no_argument, 0, 'q' },
@@ -100,3 +100,4 @@ int main(int argc, char **argv)
     field_deinit(&field);
     return 0;
 }
+*/
