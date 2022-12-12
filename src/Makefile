@@ -5,10 +5,20 @@
 
 include ../Makefile.conf
 
-SOURCE=$(wildcard *.c)
-HEADERS=$(wildcard *.h)
-OBJECTS=$(subst .c,.o,$(SOURCE))
-DEPENDS=$(subst .c,.d,$(SOURCE))
+EXE_MAIN_CLI:=cli_main
+EXE_MAIN_TUI:=tui_main
+
+OBJ_MAIN_CLI:=$(EXE_MAIN_CLI).o
+OBJ_MAIN_TUI:=$(EXE_MAIN_TUI).o
+
+SOURCE:=$(wildcard *.c)
+HEADERS:=$(wildcard *.h)
+
+OBJECTS:=$(subst .c,.o,$(SOURCE))
+OBJECTS:=$(filter-out $(OBJ_MAIN_CLI),$(OBJECTS))
+OBJECTS:=$(filter-out $(OBJ_MAIN_TUI),$(OBJECTS))
+
+DEPENDS:=$(subst .c,.d,$(SOURCE))
 CFLAGS+= -MMD -MP
 
 ifneq ($(MAKECMDGOALS),clean)
@@ -18,10 +28,18 @@ endif
 .PHONY: all install uninstall clean
 .DEFAULT_GOAL := all
 
-all: $(TARGET)
+all: $(EXE_MAIN_CLI) $(EXE_MAIN_TUI)
 
-$(TARGET): $(OBJECTS)
+$(EXE_MAIN_CLI): $(OBJECTS) $(OBJ_MAIN_CLI)
+
+$(EXE_MAIN_TUI): $(OBJECTS) $(OBJ_MAIN_TUI)
 
 clean:
-	rm -vf $(TARGET) $(OBJECTS) $(DEPENDS)
+	rm -vf \
+		$(DEPENDS)
+		$(OBJECTS) \
+		$(OBJ_MAIN_TUI) \
+		$(OBJ_MAIN_CLI) \
+		$(EXE_MAIN_TUI) \
+		$(EXE_MAIN_CLI) \
 	rm -f *.d.*
