@@ -89,15 +89,15 @@
 extern "C" {
 #endif
 
-SOKOL_API_DECL void stm_setup(void);
-SOKOL_API_DECL uint64_t stm_now(void);
-SOKOL_API_DECL uint64_t stm_diff(uint64_t new_ticks, uint64_t old_ticks);
-SOKOL_API_DECL uint64_t stm_since(uint64_t start_ticks);
-SOKOL_API_DECL uint64_t stm_laptime(uint64_t* last_time);
-SOKOL_API_DECL double stm_sec(uint64_t ticks);
-SOKOL_API_DECL double stm_ms(uint64_t ticks);
-SOKOL_API_DECL double stm_us(uint64_t ticks);
-SOKOL_API_DECL double stm_ns(uint64_t ticks);
+    SOKOL_API_DECL void stm_setup(void);
+    SOKOL_API_DECL uint64_t stm_now(void);
+    SOKOL_API_DECL uint64_t stm_diff(uint64_t new_ticks, uint64_t old_ticks);
+    SOKOL_API_DECL uint64_t stm_since(uint64_t start_ticks);
+    SOKOL_API_DECL uint64_t stm_laptime(uint64_t *last_time);
+    SOKOL_API_DECL double stm_sec(uint64_t ticks);
+    SOKOL_API_DECL double stm_ms(uint64_t ticks);
+    SOKOL_API_DECL double stm_us(uint64_t ticks);
+    SOKOL_API_DECL double stm_ns(uint64_t ticks);
 
 #ifdef __cplusplus
 } /* extern "C" */
@@ -106,99 +106,103 @@ SOKOL_API_DECL double stm_ns(uint64_t ticks);
 /*-- IMPLEMENTATION ----------------------------------------------------------*/
 #ifdef SOKOL_IMPL
 
-#ifndef SOKOL_API_IMPL
-    #define SOKOL_API_IMPL
-#endif
-#ifndef SOKOL_ASSERT
-    #include <assert.h>
-    #define SOKOL_ASSERT(c) assert(c)
-#endif
-#ifndef _SOKOL_PRIVATE
-    #if defined(__GNUC__)
-        #define _SOKOL_PRIVATE __attribute__((unused)) static
-    #else
-        #define _SOKOL_PRIVATE static
+    #ifndef SOKOL_API_IMPL
+        #define SOKOL_API_IMPL
     #endif
-#endif
+    #ifndef SOKOL_ASSERT
+        #include <assert.h>
+        #define SOKOL_ASSERT(c) assert(c)
+    #endif
+    #ifndef _SOKOL_PRIVATE
+        #if defined(__GNUC__)
+            #define _SOKOL_PRIVATE __attribute__((unused)) static
+        #else
+            #define _SOKOL_PRIVATE static
+        #endif
+    #endif
 
 static int _stm_initialized;
-#if defined(_WIN32)
-#ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN
-#endif
-#include <windows.h>
+    #if defined(_WIN32)
+        #ifndef WIN32_LEAN_AND_MEAN
+            #define WIN32_LEAN_AND_MEAN
+        #endif
+        #include <windows.h>
 static LARGE_INTEGER _stm_win_freq;
 static LARGE_INTEGER _stm_win_start;
-#elif defined(__APPLE__) && defined(__MACH__)
-#include <mach/mach_time.h>
+    #elif defined(__APPLE__) && defined(__MACH__)
+        #include <mach/mach_time.h>
 static mach_timebase_info_data_t _stm_osx_timebase;
 static uint64_t _stm_osx_start;
-#else /* anything else, this will need more care for non-Linux platforms */
-#include <time.h>
+    #else /* anything else, this will need more care for non-Linux platforms */
+        #include <time.h>
 static uint64_t _stm_posix_start;
-#endif
+    #endif
 
-/* prevent 64-bit overflow when computing relative timestamp
+    /* prevent 64-bit overflow when computing relative timestamp
     see https://gist.github.com/jspohr/3dc4f00033d79ec5bdaf67bc46c813e3
 */
-#if defined(_WIN32) || (defined(__APPLE__) && defined(__MACH__))
-_SOKOL_PRIVATE int64_t int64_muldiv(int64_t value, int64_t numer, int64_t denom) {
+    #if defined(_WIN32) || (defined(__APPLE__) && defined(__MACH__))
+_SOKOL_PRIVATE int64_t int64_muldiv(int64_t value, int64_t numer, int64_t denom)
+{
     int64_t q = value / denom;
     int64_t r = value % denom;
     return q * numer + r * numer / denom;
 }
-#endif
+    #endif
 
-
-SOKOL_API_IMPL void stm_setup(void) {
+SOKOL_API_IMPL void stm_setup(void)
+{
     SOKOL_ASSERT(0 == _stm_initialized);
     _stm_initialized = 1;
     #if defined(_WIN32)
-        QueryPerformanceFrequency(&_stm_win_freq);
-        QueryPerformanceCounter(&_stm_win_start);
+    QueryPerformanceFrequency(&_stm_win_freq);
+    QueryPerformanceCounter(&_stm_win_start);
     #elif defined(__APPLE__) && defined(__MACH__)
-        mach_timebase_info(&_stm_osx_timebase);
-        _stm_osx_start = mach_absolute_time();
+    mach_timebase_info(&_stm_osx_timebase);
+    _stm_osx_start = mach_absolute_time();
     #else
-        struct timespec ts;
-        clock_gettime(CLOCK_MONOTONIC, &ts);
-        _stm_posix_start = (uint64_t)ts.tv_sec*1000000000 + (uint64_t)ts.tv_nsec;
+    struct timespec ts;
+    clock_gettime(CLOCK_MONOTONIC, &ts);
+    _stm_posix_start = (uint64_t)ts.tv_sec * 1000000000 + (uint64_t)ts.tv_nsec;
     #endif
 }
 
-SOKOL_API_IMPL uint64_t stm_now(void) {
+SOKOL_API_IMPL uint64_t stm_now(void)
+{
     SOKOL_ASSERT(_stm_initialized);
     uint64_t now;
     #if defined(_WIN32)
-        LARGE_INTEGER qpc_t;
-        QueryPerformanceCounter(&qpc_t);
-        now = int64_muldiv(qpc_t.QuadPart - _stm_win_start.QuadPart, 1000000000, _stm_win_freq.QuadPart);
+    LARGE_INTEGER qpc_t;
+    QueryPerformanceCounter(&qpc_t);
+    now = int64_muldiv(qpc_t.QuadPart - _stm_win_start.QuadPart, 1000000000, _stm_win_freq.QuadPart);
     #elif defined(__APPLE__) && defined(__MACH__)
-        const uint64_t mach_now = mach_absolute_time() - _stm_osx_start;
-        now = int64_muldiv(mach_now, _stm_osx_timebase.numer, _stm_osx_timebase.denom);
+    const uint64_t mach_now = mach_absolute_time() - _stm_osx_start;
+    now = int64_muldiv(mach_now, _stm_osx_timebase.numer, _stm_osx_timebase.denom);
     #else
-        struct timespec ts;
-        clock_gettime(CLOCK_MONOTONIC, &ts);
-        now = ((uint64_t)ts.tv_sec*1000000000 + (uint64_t)ts.tv_nsec) - _stm_posix_start;
+    struct timespec ts;
+    clock_gettime(CLOCK_MONOTONIC, &ts);
+    now = ((uint64_t)ts.tv_sec * 1000000000 + (uint64_t)ts.tv_nsec) - _stm_posix_start;
     #endif
     return now;
 }
 
-SOKOL_API_IMPL uint64_t stm_diff(uint64_t new_ticks, uint64_t old_ticks) {
+SOKOL_API_IMPL uint64_t stm_diff(uint64_t new_ticks, uint64_t old_ticks)
+{
     if (new_ticks > old_ticks) {
         return new_ticks - old_ticks;
-    }
-    else {
+    } else {
         /* FIXME: this should be a value that converts to a non-null double */
         return 1;
     }
 }
 
-SOKOL_API_IMPL uint64_t stm_since(uint64_t start_ticks) {
+SOKOL_API_IMPL uint64_t stm_since(uint64_t start_ticks)
+{
     return stm_diff(stm_now(), start_ticks);
 }
 
-SOKOL_API_IMPL uint64_t stm_laptime(uint64_t* last_time) {
+SOKOL_API_IMPL uint64_t stm_laptime(uint64_t *last_time)
+{
     SOKOL_ASSERT(last_time);
     uint64_t dt = 0;
     uint64_t now = stm_now();
@@ -209,20 +213,23 @@ SOKOL_API_IMPL uint64_t stm_laptime(uint64_t* last_time) {
     return dt;
 }
 
-SOKOL_API_IMPL double stm_sec(uint64_t ticks) {
+SOKOL_API_IMPL double stm_sec(uint64_t ticks)
+{
     return (double)ticks / 1000000000.0;
 }
 
-SOKOL_API_IMPL double stm_ms(uint64_t ticks) {
+SOKOL_API_IMPL double stm_ms(uint64_t ticks)
+{
     return (double)ticks / 1000000.0;
 }
 
-SOKOL_API_IMPL double stm_us(uint64_t ticks) {
+SOKOL_API_IMPL double stm_us(uint64_t ticks)
+{
     return (double)ticks / 1000.0;
 }
 
-SOKOL_API_IMPL double stm_ns(uint64_t ticks) {
+SOKOL_API_IMPL double stm_ns(uint64_t ticks)
+{
     return (double)ticks;
 }
 #endif /* SOKOL_IMPL */
-

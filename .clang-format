@@ -3,3 +3,40 @@ ReflowComments: false
 
 MacroBlockBegin: "^BEGIN_OPERATOR"
 MacroBlockEnd: "^END_OPERATOR"
+
+Language: Cpp
+DerivePointerAlignment: true
+SortIncludes: Never
+PointerAlignment: Left
+AlignAfterOpenBracket: AlwaysBreak
+AlignOperands: AlignAfterOperator
+AlignTrailingComments: true
+AllowAllArgumentsOnNextLine: false
+AllowAllParametersOfDeclarationOnNextLine: false
+AllowShortEnumsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: Empty
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+BinPackArguments: false
+BinPackParameters: false
+ExperimentalAutoDetectBinPacking: true
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterFunction: true
+ColumnLimit: 100
+AlwaysBreakAfterDefinitionReturnType: None
+AlwaysBreakAfterReturnType: None
+PenaltyBreakBeforeFirstCallParameter: 0
+PenaltyReturnTypeOnItsOwnLine: 1000000
+PenaltyBreakAssignment: 1000000
+PenaltyExcessCharacter: 10
+IndentCaseLabels: true
+IndentWidth: 4
+MaxEmptyLinesToKeep: 2
+NamespaceIndentation: All
+SpaceAfterTemplateKeyword: false
+AccessModifierOffset: -4
+AllowShortBlocksOnASingleLine: Always
+IndentPPDirectives: BeforeHash
+IndentExternBlock: Indent
+Cpp11BracedListStyle: false

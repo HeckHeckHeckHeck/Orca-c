@@ -92,18 +92,18 @@
 #include <stddef.h>
 
 #if (defined(__GNUC__) || defined(__clang__)) && defined(__has_attribute)
-#if __has_attribute(format)
-#define OSO_PRINTF(...) __attribute__((format(printf, __VA_ARGS__)))
-#endif
-#if __has_attribute(nonnull)
-#define OSO_NONNULL(...) __attribute__((nonnull(__VA_ARGS__)))
-#endif
+    #if __has_attribute(format)
+        #define OSO_PRINTF(...) __attribute__((format(printf, __VA_ARGS__)))
+    #endif
+    #if __has_attribute(nonnull)
+        #define OSO_NONNULL(...) __attribute__((nonnull(__VA_ARGS__)))
+    #endif
 #endif
 #ifndef OSO_PRINTF
-#define OSO_PRINTF(...)
+    #define OSO_PRINTF(...)
 #endif
 #ifndef OSO_NONNULL
-#define OSO_NONNULL(...)
+    #define OSO_NONNULL(...)
 #endif
 
 typedef struct oso oso;
@@ -122,19 +122,15 @@ void osoputlen(oso **p, char const *cstr, size_t len) OSO_NONNULL();
 void osoputoso(oso **p, oso const *other) OSO_NONNULL(1);
 // ^- Same as above, but using another `oso`. `*p` and `other` must not point
 //    to overlapping memory.
-void osoputvprintf(oso **p, char const *fmt, va_list ap) OSO_NONNULL(1, 2)
-    OSO_PRINTF(2, 0);
-void osoputprintf(oso **p, char const *fmt, ...) OSO_NONNULL(1, 2)
-    OSO_PRINTF(2, 3);
+void osoputvprintf(oso **p, char const *fmt, va_list ap) OSO_NONNULL(1, 2) OSO_PRINTF(2, 0);
+void osoputprintf(oso **p, char const *fmt, ...) OSO_NONNULL(1, 2) OSO_PRINTF(2, 3);
 // ^- Same as above, but do it by using printf.
 
 void osocat(oso **p, char const *cstr) OSO_NONNULL();
 void osocatlen(oso **p, char const *cstr, size_t len) OSO_NONNULL();
 void osocatoso(oso **p, oso const *other) OSO_NONNULL(1);
-void osocatvprintf(oso **p, char const *fmt, va_list ap) OSO_NONNULL(1, 2)
-    OSO_PRINTF(2, 0);
-void osocatprintf(oso **p, char const *fmt, ...) OSO_NONNULL(1, 2)
-    OSO_PRINTF(2, 3);
+void osocatvprintf(oso **p, char const *fmt, va_list ap) OSO_NONNULL(1, 2) OSO_PRINTF(2, 0);
+void osocatprintf(oso **p, char const *fmt, ...) OSO_NONNULL(1, 2) OSO_PRINTF(2, 3);
 // ^- Append string to oso string. Same rules as `osoput` family.
 
 void osoensurecap(oso **p, size_t cap) OSO_NONNULL();
@@ -169,8 +165,7 @@ size_t osolen(oso const *s);
 // ^- Bytes in use by the string (not including the '\0' character.)
 size_t osocap(oso const *s);
 // ^- Bytes allocated on heap (not including the '\0' terminator.)
-void osolencap(oso const *s, size_t *out_len, size_t *out_cap)
-    OSO_NONNULL(2, 3);
+void osolencap(oso const *s, size_t *out_len, size_t *out_cap) OSO_NONNULL(2, 3);
 // ^- Get both the len and the cap in one call.
 size_t osoavail(oso const *s);
 // ^- osocap(s) - osolen(s)
