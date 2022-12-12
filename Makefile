@@ -1,16 +1,9 @@
-all: release
+.PHONY: all src clean
 
-.PHONY: debug
-debug:
-	@./tool build -d --portmidi orca
+all: src
 
-.PHONY: release
-release:
-	@./tool build --portmidi orca
-	@echo "Executable program saved as: build/orca" >&2
-	@echo "To run it, simply execute it:" >&2
-	@echo "$$ build/orca" >&2
+src:
+	$(MAKE) -C src
 
-.PHONY: clean
 clean:
-	@./tool clean
+	$(MAKE) -C src clean
