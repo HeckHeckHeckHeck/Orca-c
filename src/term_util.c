@@ -18,14 +18,6 @@ void term_util_init_colors()
                 (void)res;
                 // Might fail on Linux virtual console/terminal for a couple of colors.
                 // Just ignore.
-#if 0
-        if (res == ERR) {
-          endwin();
-          fprintf(stderr, "Error initializing color pair: %d %d\n", ifg - 1,
-                  ibg - 1);
-          exit(1);
-        }
-#endif
             }
         }
     }
