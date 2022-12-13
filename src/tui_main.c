@@ -2703,27 +2703,6 @@ staticni bool read_int(char const *str, int *out)
     return true;
 }
 
-// Reads something like '5x3' or '5'. Writes the same value to both outputs if
-// only one is specified. Returns false on error.
-staticni bool read_nxn_or_n(char const *str, int *out_a, int *out_b)
-{
-    int a, b;
-    int res = sscanf(str, "%dx%d", &a, &b);
-    if (res == EOF)
-        return false;
-    if (res == 1) {
-        *out_a = a;
-        *out_b = a;
-        return true;
-    }
-    if (res == 2) {
-        *out_a = a;
-        *out_b = b;
-        return true;
-    }
-    return false;
-}
-
 typedef enum
 {
     Brackpaste_seq_none = 0,

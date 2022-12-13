@@ -1,4 +1,5 @@
 #pragma once
+#include <stdio.h>
 #include <assert.h>
 #include <limits.h>
 #include <stdbool.h>
@@ -76,6 +77,11 @@ typedef ssize_t Isz;
 typedef char Glyph;
 typedef U8 Mark;
 
+enum
+{
+    Hud_height = 2
+};
+
 ORCA_FORCEINLINE static Usz orca_round_up_power2(Usz x)
 {
     assert(x <= SIZE_MAX / 2 + 1);
@@ -111,6 +117,33 @@ static bool orca_is_valid_glyph(Glyph c)
         case '=':
         case '?':
             return true;
+    }
+    return false;
+}
+
+static ORCA_FORCEINLINE double ms_to_sec(double ms)
+{
+    return ms / 1000.0;
+}
+
+
+// Reads something like '5x3' or '5'. Writes the same value to both outputs if
+// only one is specified. Returns false on error.
+staticni bool read_nxn_or_n(char const *str, int *out_a, int *out_b)
+{
+    int a, b;
+    int res = sscanf(str, "%dx%d", &a, &b);
+    if (res == EOF)
+        return false;
+    if (res == 1) {
+        *out_a = a;
+        *out_b = a;
+        return true;
+    }
+    if (res == 2) {
+        *out_a = a;
+        *out_b = b;
+        return true;
     }
     return false;
 }
