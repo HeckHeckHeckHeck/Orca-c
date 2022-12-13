@@ -13,6 +13,11 @@
 
 #define CTRL_PLUS(c) ((c)&037)
 
+#if NCURSES_VERSION_PATCH < 20081122
+int _nc_has_mouse(void);
+    #define has_mouse _nc_has_mouse
+#endif
+
 struct oso;
 
 typedef enum

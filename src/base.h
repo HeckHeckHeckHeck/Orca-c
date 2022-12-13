@@ -57,6 +57,8 @@
     #define ORCA_ARRAY_COUNTOF(_array) (sizeof(_array) / sizeof(_array[0]))
 #endif
 
+#define staticni ORCA_NOINLINE static
+
 #define ORCA_Y_MAX UINT16_MAX
 #define ORCA_X_MAX UINT16_MAX
 
