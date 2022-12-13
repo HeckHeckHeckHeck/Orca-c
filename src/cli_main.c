@@ -5,6 +5,10 @@
 #include "vmio.h"
 #include <getopt.h>
 
+#define SOKOL_IMPL
+#include "sokol_time.h"
+#undef SOKOL_IMPL
+
 static ORCA_NOINLINE void usage(void)
 { // clang-format off
 fprintf(stderr,
