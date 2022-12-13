@@ -1,7 +1,7 @@
 # The following values reflect the defaults
 # uncomment and adjust
 
-# PREFIX?=/opt/local
+# PREFIX=/opt/local
 # DEBUG?=1
 # PORTMIDI_ENABLED?=1
 # MOUSE_ENABLED?=1
