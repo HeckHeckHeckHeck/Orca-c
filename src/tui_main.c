@@ -319,7 +319,7 @@ void main_init(int argc, char **argv)
         }
         field_init_fill(&ged.field, (Usz)new_field_h, (Usz)new_field_w, '.');
     }
-    mbuf_reusable_ensure_size(&ged.mbuf_r, ged.field.height, ged.field.width);
+    markbuf_ensure_size(&ged.mbuf_r, ged.field.height, ged.field.width);
     ged_make_cursor_visible(&ged);
     ged_send_osc_bpm(&ged, (I32)ged.bpm); // Send initial BPM
     ged_set_playing(&ged, true);          // Auto-play

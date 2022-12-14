@@ -24,7 +24,7 @@ typedef struct {
     Field field;
     Field scratch_field;
     Field clipboard_field;
-    Mbuf_reusable mbuf_r;
+    MarkBuf mbuf_r;
     Undo_history undo_hist;
     Oevent_list oevent_list;
     Oevent_list scratch_oevent_list;
@@ -112,7 +112,7 @@ void ged_set_window_size(Ged *a, int win_h, int win_w, int softmargin_y, int sof
 
 void ged_resize_grid(
     Field *field,
-    Mbuf_reusable *mbr,
+    MarkBuf *mbr,
     Usz new_height,
     Usz new_width,
     Usz tick_num,

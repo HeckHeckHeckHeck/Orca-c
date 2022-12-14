@@ -10,10 +10,10 @@
 // for saving/loading Mark* buffers to/from disk, since we currently don't need
 // that functionality.
 
-typedef struct Mbuf_reusable {
+typedef struct MarkBuf {
     Mark *buffer;
     Usz capacity;
-} Mbuf_reusable;
+} MarkBuf;
 
 // A reusable buffer for glyphs, stored with its dimensions. Also some helpers
 // for loading/saving from files and doing common operations that a UI layer
@@ -46,9 +46,9 @@ Field_load_error field_load_file(char const *filepath, Field *field);
 
 char const *field_load_error_string(Field_load_error fle);
 
-void mbuf_reusable_init(Mbuf_reusable *mbr);
-void mbuf_reusable_ensure_size(Mbuf_reusable *mbr, Usz height, Usz width);
-void mbuf_reusable_deinit(Mbuf_reusable *mbr);
+void markbuf_init(MarkBuf *mbr);
+void markbuf_ensure_size(MarkBuf *mbr, Usz height, Usz width);
+void markbuf_deinit(MarkBuf *mbr);
 
 // ------------------------------------------------------------
 // FIELD-UNDO

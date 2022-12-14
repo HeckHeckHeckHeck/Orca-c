@@ -171,13 +171,13 @@ char const *field_load_error_string(Field_load_error fle)
     return errstr;
 }
 
-void mbuf_reusable_init(Mbuf_reusable *mbr)
+void markbuf_init(MarkBuf *mbr)
 {
     mbr->buffer = NULL;
     mbr->capacity = 0;
 }
 
-void mbuf_reusable_ensure_size(Mbuf_reusable *mbr, Usz height, Usz width)
+void markbuf_ensure_size(MarkBuf *mbr, Usz height, Usz width)
 {
     Usz capacity = height * width;
     if (mbr->capacity < capacity) {
@@ -186,7 +186,7 @@ void mbuf_reusable_ensure_size(Mbuf_reusable *mbr, Usz height, Usz width)
     }
 }
 
-void mbuf_reusable_deinit(Mbuf_reusable *mbr)
+void markbuf_deinit(MarkBuf *mbr)
 {
     free(mbr->buffer);
 }

@@ -86,9 +86,9 @@ int main(int argc, char **argv)
         fprintf(stderr, "File load error: %s.\n", field_load_error_string(fle));
         return 1;
     }
-    Mbuf_reusable mbuf_r;
-    mbuf_reusable_init(&mbuf_r);
-    mbuf_reusable_ensure_size(&mbuf_r, field.height, field.width);
+    MarkBuf mbuf_r;
+    markbuf_init(&mbuf_r);
+    markbuf_ensure_size(&mbuf_r, field.height, field.width);
     Oevent_list oevent_list;
     oevent_list_init(&oevent_list);
     Usz max_ticks = (Usz)ticks;
@@ -97,7 +97,7 @@ int main(int argc, char **argv)
         oevent_list_clear(&oevent_list);
         orca_run(field.buffer, mbuf_r.buffer, field.height, field.width, i, &oevent_list, 0);
     }
-    mbuf_reusable_deinit(&mbuf_r);
+    markbuf_deinit(&mbuf_r);
     oevent_list_deinit(&oevent_list);
     if (print_output)
         field_fput(&field, stdout);

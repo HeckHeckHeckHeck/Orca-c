@@ -362,7 +362,7 @@ void ged_init(Ged *a, Usz undo_limit, Usz init_bpm, Usz init_seed)
     field_init(&a->field);
     field_init(&a->scratch_field);
     field_init(&a->clipboard_field);
-    mbuf_reusable_init(&a->mbuf_r);
+    markbuf_init(&a->mbuf_r);
     undo_history_init(&a->undo_hist, undo_limit);
     oevent_list_init(&a->oevent_list);
     oevent_list_init(&a->scratch_oevent_list);
@@ -400,7 +400,7 @@ void ged_deinit(Ged *a)
     field_deinit(&a->field);
     field_deinit(&a->scratch_field);
     field_deinit(&a->clipboard_field);
-    mbuf_reusable_deinit(&a->mbuf_r);
+    markbuf_deinit(&a->mbuf_r);
     undo_history_deinit(&a->undo_hist);
     oevent_list_deinit(&a->oevent_list);
     oevent_list_deinit(&a->scratch_oevent_list);
@@ -743,7 +743,7 @@ void draw_oevent_list(WINDOW *win, Oevent_list const *oevent_list)
 
 void ged_resize_grid(
     Field *field,
-    Mbuf_reusable *mbr,
+    MarkBuf *mbr,
     Usz new_height,
     Usz new_width,
     Usz tick_num,
@@ -771,7 +771,7 @@ void ged_resize_grid(
         scratch_field->height,
         scratch_field->width);
     ged_cursor_confine(ged_cursor, new_height, new_width);
-    mbuf_reusable_ensure_size(mbr, new_height, new_width);
+    markbuf_ensure_size(mbr, new_height, new_width);
 }
 
 void draw_grid_cursor(
@@ -1120,7 +1120,7 @@ void ged_draw(Ged *a, WINDOW *win, char const *filename, bool use_fancy_dots, bo
     if (a->needs_remarking && !a->is_playing) {
         field_resize_raw_if_necessary(&a->scratch_field, a->field.height, a->field.width);
         field_copy(&a->field, &a->scratch_field);
-        mbuf_reusable_ensure_size(&a->mbuf_r, a->field.height, a->field.width);
+        markbuf_ensure_size(&a->mbuf_r, a->field.height, a->field.width);
         clear_and_run_vm(
             a->scratch_field.buffer,
             a->mbuf_r.buffer,
@@ -1498,7 +1498,7 @@ Usz adjust_rulers_humanized(Usz ruler, Usz in, Isz delta_rulers)
 // 1 unit longer than the actual ruler length.
 bool ged_resize_grid_snap_ruler(
     Field *field,
-    Mbuf_reusable *mbr,
+    MarkBuf *mbr,
     Usz ruler_y,
     Usz ruler_x,
     Isz delta_h,

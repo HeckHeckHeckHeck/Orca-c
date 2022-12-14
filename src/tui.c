@@ -1051,7 +1051,7 @@ Tui_menus_result tui_drive_menus(Tui *tui, int key)
                                             '.',
                                             new_field_h * new_field_w * sizeof(Glyph));
                                         ged_cursor_confine(&tui->ged->ged_cursor, new_field_h, new_field_w);
-                                        mbuf_reusable_ensure_size(&tui->ged->mbuf_r, new_field_h, new_field_w);
+                                        markbuf_ensure_size(&tui->ged->mbuf_r, new_field_h, new_field_w);
                                         ged_update_internal_geometry(tui->ged);
                                         ged_make_cursor_visible(tui->ged);
                                         tui->ged->needs_remarking = true;
@@ -1190,7 +1190,7 @@ Tui_menus_result tui_drive_menus(Tui *tui, int key)
                                 if (fle == Field_load_error_ok) {
                                     qnav_stack_pop();
                                     osoputoso(&tui->file_name, temp_name);
-                                    mbuf_reusable_ensure_size(
+                                    markbuf_ensure_size(
                                         &tui->ged->mbuf_r,
                                         tui->ged->field.height,
                                         tui->ged->field.width);
