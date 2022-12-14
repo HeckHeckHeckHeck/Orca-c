@@ -50,16 +50,6 @@ fprintf(stderr,
 );} // clang-format on
 
 
-staticni bool read_int(char const *str, int *out)
-{
-    int a;
-    int res = sscanf(str, "%d", &a);
-    if (res != 1)
-        return false;
-    *out = a;
-    return true;
-}
-
 typedef enum
 {
     Brackpaste_seq_none = 0,
@@ -174,15 +164,15 @@ void main_init(int argc, char **argv)
                     break;
                 OPTFAIL("Must be 0 or positive integer.");
             case Argopt_undo_limit:
-                if (read_int(optarg, &tui.undo_history_limit) && tui.undo_history_limit >= 0)
+                if (str_to_int(optarg, &tui.undo_history_limit) && tui.undo_history_limit >= 0)
                     break;
                 OPTFAIL("Must be 0 or positive integer.");
             case Argopt_bpm:
-                if (read_int(optarg, &init_bpm) && init_bpm >= 1)
+                if (str_to_int(optarg, &init_bpm) && init_bpm >= 1)
                     break;
                 OPTFAIL("Must be positive integer.");
             case Argopt_seed:
-                if (read_int(optarg, &init_seed) && init_seed >= 0)
+                if (str_to_int(optarg, &init_seed) && init_seed >= 0)
                     break;
                 OPTFAIL("Must be 0 or positive integer.");
             case Argopt_init_grid_size:
