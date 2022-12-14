@@ -60,9 +60,10 @@
 
 #define staticni ORCA_NOINLINE static
 
-#define ORCA_Y_MAX UINT16_MAX
-#define ORCA_X_MAX UINT16_MAX
 
+//----------------------------------------------------------------------------------------
+// Types
+//----------------------------------------------------------------------------------------
 typedef uint8_t U8;
 typedef int8_t I8;
 typedef uint16_t U16;
@@ -77,10 +78,23 @@ typedef ssize_t Isz;
 typedef char Glyph;
 typedef U8 Mark;
 
+//----------------------------------------------------------------------------------------
+// Constants
+//----------------------------------------------------------------------------------------
+#define ORCA_Y_MAX UINT16_MAX
+#define ORCA_X_MAX UINT16_MAX
+
 enum
 {
     Hud_height = 2
 };
+
+
+
+
+//----------------------------------------------------------------------------------------
+// Utils
+//----------------------------------------------------------------------------------------
 
 ORCA_FORCEINLINE static Usz orca_round_up_power2(Usz x)
 {
@@ -127,6 +141,16 @@ static ORCA_FORCEINLINE double ms_to_sec(double ms)
 }
 
 
+staticni bool str_to_int(char const *str, int *out)
+{
+    int a;
+    int res = sscanf(str, "%d", &a);
+    if (res != 1)
+        return false;
+    *out = a;
+    return true;
+}
+
 // Reads something like '5x3' or '5'. Writes the same value to both outputs if
 // only one is specified. Returns false on error.
 staticni bool read_nxn_or_n(char const *str, int *out_a, int *out_b)
@@ -147,3 +171,4 @@ staticni bool read_nxn_or_n(char const *str, int *out_a, int *out_b)
     }
     return false;
 }
+
