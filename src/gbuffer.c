@@ -91,6 +91,85 @@ void gbuffer_fill_subrect(
     }
 }
 
+Glyph gbuffer_peek_relative(
+    Glyph *gbuf,
+    Usz height,
+    Usz width,
+    Usz y,
+    Usz x,
+    Isz delta_y,
+    Isz delta_x)
+{
+    Isz y0 = (Isz)y + delta_y;
+    Isz x0 = (Isz)x + delta_x;
+    if (y0 < 0 || x0 < 0 || (Usz)y0 >= height || (Usz)x0 >= width)
+        return '.';
+    return gbuf[(Usz)y0 * width + (Usz)x0];
+}
+
+void gbuffer_poke(Glyph *gbuf, Usz height, Usz width, Usz y, Usz x, Glyph g)
+{
+    assert(y < height && x < width);
+    (void)height;
+    gbuf[y * width + x] = g;
+}
+
+void gbuffer_poke_relative(
+    Glyph *gbuf,
+    Usz height,
+    Usz width,
+    Usz y,
+    Usz x,
+    Isz delta_y,
+    Isz delta_x,
+    Glyph g)
+{
+    Isz y0 = (Isz)y + delta_y;
+    Isz x0 = (Isz)x + delta_x;
+    if (y0 < 0 || x0 < 0 || (Usz)y0 >= height || (Usz)x0 >= width)
+        return;
+    gbuf[(Usz)y0 * width + (Usz)x0] = g;
+}
+
+
+Mark_flags mbuffer_peek(Mark *mbuf, Usz height, Usz width, Usz y, Usz x)
+{
+    (void)height;
+    return mbuf[y * width + x];
+}
+
+Mark_flags mbuffer_peek_relative(Mark *mbuf, Usz height, Usz width, Usz y, Usz x, Isz offs_y, Isz offs_x)
+{
+    Isz y0 = (Isz)y + offs_y;
+    Isz x0 = (Isz)x + offs_x;
+    if (y0 >= (Isz)height || x0 >= (Isz)width || y0 < 0 || x0 < 0)
+        return Mark_flag_none;
+    return mbuf[(Usz)y0 * width + (Usz)x0];
+}
+
+void mbuffer_poke_flags_or(Mark *mbuf, Usz height, Usz width, Usz y, Usz x, Mark_flags flags)
+{
+    (void)height;
+    mbuf[y * width + x] |= (Mark)flags;
+}
+
+void mbuffer_poke_relative_flags_or(
+    Mark *mbuf,
+    Usz height,
+    Usz width,
+    Usz y,
+    Usz x,
+    Isz offs_y,
+    Isz offs_x,
+    Mark_flags flags)
+{
+    Isz y0 = (Isz)y + offs_y;
+    Isz x0 = (Isz)x + offs_x;
+    if (y0 >= (Isz)height || x0 >= (Isz)width || y0 < 0 || x0 < 0)
+        return;
+    mbuf[(Usz)y0 * width + (Usz)x0] |= (Mark)flags;
+}
+
 void mbuffer_clear(Mark *mbuf, Usz height, Usz width)
 {
     Usz cleared_size = height * width;
