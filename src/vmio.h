@@ -1,6 +1,12 @@
 #pragma once
 #include "base.h"
 
+enum
+{
+    Oevent_osc_int_count = 35,
+    Oevent_udp_string_count = 16
+};
+
 typedef enum
 {
     Oevent_type_midi_note,
@@ -16,23 +22,27 @@ typedef struct {
 
 typedef struct {
     U8 oevent_type;
-    U8 channel, octave, note, velocity, duration : 7, mono : 1;
+    U8 channel;
+    U8 octave;
+    U8 note;
+    U8 velocity;
+    U8 duration : 7;
+    U8 mono : 1;
 } Oevent_midi_note;
 
 typedef struct {
     U8 oevent_type;
-    U8 channel, control, value;
+    U8 channel;
+    U8 control;
+    U8 value;
 } Oevent_midi_cc;
 
 typedef struct {
     U8 oevent_type;
-    U8 channel, lsb, msb;
+    U8 channel;
+    U8 lsb;
+    U8 msb;
 } Oevent_midi_pb;
-
-enum
-{
-    Oevent_osc_int_count = 35
-};
 
 typedef struct {
     U8 oevent_type;
@@ -40,11 +50,6 @@ typedef struct {
     U8 count;
     U8 numbers[Oevent_osc_int_count];
 } Oevent_osc_ints;
-
-enum
-{
-    Oevent_udp_string_count = 16
-};
 
 typedef struct {
     U8 oevent_type;
