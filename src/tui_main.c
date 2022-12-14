@@ -120,7 +120,7 @@ enum
 };
 
 Ged ged;
-WINDOW *cont_window = NULL;
+WINDOW *window_main = NULL;
 Tui tui;
 
 void main_init(int argc, char **argv)
@@ -274,7 +274,7 @@ void main_init(int argc, char **argv)
 
     wtimeout(stdscr, 0);
 
-    tui_adjust_term_size(&tui, &cont_window);
+    tui_adjust_term_size(&tui, &window_main);
 
     bool grid_initialized = false;
     if (osolen(tui.file_name)) {
@@ -346,14 +346,14 @@ event_loop:;
             ged_do_stuff(&ged);
             bool drew_any = false;
             if (ged_is_draw_dirty(&ged) || qnav_stack.occlusion_dirty) {
-                werase(cont_window);
+                werase(window_main);
                 ged_draw(
                     &ged,
-                    cont_window,
+                    window_main,
                     osoc(tui.file_name),
                     tui.fancy_grid_dots,
                     tui.fancy_grid_rulers);
-                wnoutrefresh(cont_window);
+                wnoutrefresh(window_main);
                 drew_any = true;
             }
             drew_any |= qnav_draw(); // clears qnav_stack.occlusion_dirty
@@ -417,17 +417,17 @@ event_loop:;
         // END Case: ERR
         // clang-format on
         case KEY_RESIZE:
-            tui_adjust_term_size(&tui, &cont_window);
+            tui_adjust_term_size(&tui, &window_main);
             qnav_adjust_term_size();
             goto event_loop;
 #ifndef FEAT_NOMOUSE
         case KEY_MOUSE: {
             MEVENT mevent;
-            if (cont_window && getmouse(&mevent) == OK) {
+            if (window_main && getmouse(&mevent) == OK) {
                 int win_y, win_x;
                 int win_h, win_w;
-                getbegyx(cont_window, win_y, win_x);
-                getmaxyx(cont_window, win_h, win_w);
+                getbegyx(window_main, win_y, win_x);
+                getmaxyx(window_main, win_h, win_w);
                 int inwin_y = mevent.y - win_y;
                 int inwin_x = mevent.x - win_x;
                 if (inwin_y >= win_h)
@@ -758,8 +758,8 @@ event_loop:;
 quit:
     ged_stop_all_sustained_notes(&ged);
     qnav_deinit();
-    if (cont_window)
-        delwin(cont_window);
+    if (window_main)
+        delwin(window_main);
 #ifndef FEAT_NOMOUSE
     printf("\033[?1003l\n"); // turn off console mouse events if they were active
 #endif
