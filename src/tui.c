@@ -838,7 +838,7 @@ void tui_restart_osc_udp_if_enabled(Tui *tui)
     if (did_error)
         tui_restart_osc_udp_showerror();
 }
-void tui_adjust_term_size(Tui *tui, WINDOW **cont_window)
+void tui_adjust_term_size(Tui *tui, WINDOW **win)
 {
     int term_h, term_w;
     getmaxyx(stdscr, term_h, term_w);
@@ -854,18 +854,18 @@ void tui_adjust_term_size(Tui *tui, WINDOW **cont_window)
         content_w -= tui->hardmargin_x * 2;
     }
     bool remake_window = true;
-    if (*cont_window) {
+    if (*win) {
         int cwin_y, cwin_x, cwin_h, cwin_w;
-        getbegyx(*cont_window, cwin_y, cwin_x);
-        getmaxyx(*cont_window, cwin_h, cwin_w);
+        getbegyx(*win, cwin_y, cwin_x);
+        getmaxyx(*win, cwin_h, cwin_w);
         remake_window = cwin_y != content_y || cwin_x != content_x || cwin_h != content_h ||
                         cwin_w != content_w;
     }
     if (remake_window) {
-        if (*cont_window)
-            delwin(*cont_window);
+        if (*win)
+            delwin(*win);
         wclear(stdscr);
-        *cont_window = derwin(stdscr, content_h, content_w, content_y, content_x);
+        *win = derwin(stdscr, content_h, content_w, content_y, content_x);
         tui->ged->is_draw_dirty = true;
     }
     // OK to call this unconditionally -- deriving the sub-window areas is

@@ -39,7 +39,7 @@ bool tui_suggest_nice_grid_size(Tui *tui, int win_h, int win_w, Usz *out_grid_h,
 
 void tui_restart_osc_udp_if_enabled(Tui *tui);
 
-void tui_adjust_term_size(Tui *tui, WINDOW **cont_window);
+void tui_adjust_term_size(Tui *tui, WINDOW **win);
 
 void tui_try_save(Tui *tui);
 
