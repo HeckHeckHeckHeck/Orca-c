@@ -92,7 +92,8 @@ staticni void try_send_to_gui_clipboard(Ged const *a, bool *io_use_gui_clipboard
       cboard_copy(a->clipboard_field.buffer, a->clipboard_field.height,
                   a->clipboard_field.width, curs_y, curs_x, curs_h, curs_w);
 #endif
-    Usz cb_h = a->clipboard_field.height, cb_w = a->clipboard_field.width;
+    Usz cb_h = a->clipboard_field.height;
+    Usz cb_w = a->clipboard_field.width;
     if (cb_h < 1 || cb_w < 1)
         return;
     Cboard_error cberr = cboard_copy(a->clipboard_field.buffer, cb_h, cb_w, 0, 0, cb_h, cb_w);
@@ -137,7 +138,8 @@ void main_init(int argc, char **argv)
     };
     int init_bpm = 120;
     int init_seed = 1;
-    int init_grid_dim_y = 25, init_grid_dim_x = 57;
+    int init_grid_dim_y = 25;
+    int init_grid_dim_x = 57;
     bool explicit_initial_grid_size = false;
 
     tui_init(&tui, &ged);
@@ -226,21 +228,26 @@ void main_init(int argc, char **argv)
         fprintf(stderr, "Expected only 1 file argument.\n");
         exit(1);
     }
-    qnav_init(); // Initialize the menu/navigation global state
-    // Initialize the 'Grid EDitor' stuff. This sits underneath the TUI.
 
+    qnav_init(); // Initialize the menu/navigation global state
+
+    // Initialize the 'Grid EDitor' stuff. This sits underneath the TUI.
     ged_init(&ged, (Usz)tui.undo_history_limit, (Usz)init_bpm, (Usz)init_seed);
+
     // This will need to be changed to work with conf/menu
     if (osolen(tui.osc_midi_bidule_path) > 0) {
         midi_mode_deinit(&ged.midi_mode);
         midi_mode_init_osc_bidule(&ged.midi_mode, osoc(tui.osc_midi_bidule_path));
     }
+
     stm_setup(); // Set up timer lib
+
     // Enable UTF-8 by explicitly initializing our locale before initializing
     // ncurses. Only needed (maybe?) if using libncursesw/wide-chars or UTF-8.
     // Using it unguarded will mess up box drawing chars in Linux virtual
     // consoles unless using libncursesw.
     setlocale(LC_ALL, "");
+
     initscr(); // Initialize ncurses
     // Allow ncurses to control newline translation. Fine to use with any modern
     // terminal, and will let ncurses run faster.
