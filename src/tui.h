@@ -1,8 +1,8 @@
 #pragma once
 #include "base.h"
 #include "oso.h"
-#include "ged.h"
 #include "term_util.h"
+#include "ged.h"
 
 typedef struct {
     Ged *ged;

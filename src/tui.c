@@ -1,10 +1,11 @@
-//#include "base.h"
-//#include "oso.h"
+#include "base.h"
+#include "oso.h"
 #include "sysmisc.h"
 #include "field.h"
-//#include "term_util.h"
-#include "tui.h"
 #include "midi.h"
+#include "term_util.h"
+#include "ged.h"
+#include "tui.h"
 
 char const *const conf_file_name = "orca.conf";
 
