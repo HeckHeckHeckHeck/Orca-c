@@ -100,18 +100,6 @@ staticni void try_send_to_gui_clipboard(Ged const *a, bool *io_use_gui_clipboard
         *io_use_gui_clipboard = false;
 }
 
-enum
-{
-    Argopt_hardmargins = UCHAR_MAX + 1,
-    Argopt_undo_limit,
-    Argopt_init_grid_size,
-    Argopt_osc_midi_bidule,
-    Argopt_strict_timing,
-    Argopt_bpm,
-    Argopt_seed,
-    Argopt_portmidi_deprecated,
-    Argopt_osc_deprecated,
-};
 
 Ged ged;
 WINDOW *window_main = NULL;
@@ -119,6 +107,19 @@ Tui tui;
 
 void main_init(int argc, char **argv)
 {
+    enum
+    {
+        Argopt_hardmargins = UCHAR_MAX + 1,
+        Argopt_undo_limit,
+        Argopt_init_grid_size,
+        Argopt_osc_midi_bidule,
+        Argopt_strict_timing,
+        Argopt_bpm,
+        Argopt_seed,
+        Argopt_portmidi_deprecated,
+        Argopt_osc_deprecated,
+    };
+
     static struct option tui_options[] = {
         { "hard-margins", required_argument, 0, Argopt_hardmargins },
         { "undo-limit", required_argument, 0, Argopt_undo_limit },
