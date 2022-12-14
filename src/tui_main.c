@@ -1,5 +1,4 @@
-#include "tui.h"
-#include "ged.h"
+// no transitive includes
 #include "base.h"
 #include "field.h"
 #include "gbuffer.h"
@@ -7,6 +6,11 @@
 #include "sysmisc.h"
 #include "term_util.h"
 #include "midi.h"
+
+// many transisitve includes
+#include "ged.h"
+#include "tui.h"
+
 #include <getopt.h>
 #include <locale.h>
 
