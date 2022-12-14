@@ -62,6 +62,30 @@ typedef struct {
     bool is_hud_visible : 1;
 } Ged;
 
+typedef enum
+{
+    Ged_dir_up,
+    Ged_dir_down,
+    Ged_dir_left,
+    Ged_dir_right,
+} Ged_dir;
+
+typedef enum
+{
+    Ged_input_cmd_undo,
+    Ged_input_cmd_toggle_append_mode,
+    Ged_input_cmd_toggle_selresize_mode,
+    Ged_input_cmd_toggle_slide_mode,
+    Ged_input_cmd_step_forward,
+    Ged_input_cmd_toggle_show_event_list,
+    Ged_input_cmd_toggle_play_pause,
+    Ged_input_cmd_cut,
+    Ged_input_cmd_copy,
+    Ged_input_cmd_paste,
+    Ged_input_cmd_escape,
+} Ged_input_cmd;
+
+
 void ged_init(Ged *a, Usz undo_limit, Usz init_bpm, Usz init_seed);
 
 void ged_make_cursor_visible(Ged *a);
@@ -80,33 +104,10 @@ double ged_secs_to_deadline(Ged const *a);
 
 ORCA_OK_IF_UNUSED void ged_mouse_event(Ged *a, Usz vis_y, Usz vis_x, mmask_t mouse_bstate);
 
-typedef enum
-{
-    Ged_dir_up,
-    Ged_dir_down,
-    Ged_dir_left,
-    Ged_dir_right,
-} Ged_dir;
 
 void ged_dir_input(Ged *a, Ged_dir dir, int step_length);
 
 void ged_input_character(Ged *a, char c);
-
-typedef enum
-{
-    Ged_input_cmd_undo,
-    Ged_input_cmd_toggle_append_mode,
-    Ged_input_cmd_toggle_selresize_mode,
-    Ged_input_cmd_toggle_slide_mode,
-    Ged_input_cmd_step_forward,
-    Ged_input_cmd_toggle_show_event_list,
-    Ged_input_cmd_toggle_play_pause,
-    Ged_input_cmd_cut,
-    Ged_input_cmd_copy,
-    Ged_input_cmd_paste,
-    Ged_input_cmd_escape,
-} Ged_input_cmd;
-
 
 void ged_set_window_size(Ged *a, int win_h, int win_w, int softmargin_y, int softmargin_x);
 

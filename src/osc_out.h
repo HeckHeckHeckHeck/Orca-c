@@ -10,16 +10,6 @@ typedef enum
     Oosc_udp_create_error_couldnt_open_socket = 2,
 } Oosc_udp_create_error;
 
-Oosc_udp_create_error oosc_dev_create_udp(Oosc_dev **out_ptr, char const *dest_addr, char const *dest_port);
-void oosc_dev_destroy(Oosc_dev *dev);
-
-// Send a raw UDP datagram.
-void oosc_send_datagram(Oosc_dev *dev, char const *data, Usz size);
-
-// Send a list/array of 32-bit integers in OSC format to the specified "osc
-// address" (a path like /foo) as a UDP datagram.
-void oosc_send_int32s(Oosc_dev *dev, char const *osc_address, I32 const *vals, Usz count);
-
 // Susnote is for handling MIDI note sustains -- each MIDI on event should be
 // matched with a MIDI note-off event. The duration/sustain length of a MIDI
 // note is specified when it is first triggered, so the orca VM itself is not
@@ -34,6 +24,16 @@ typedef struct {
     Susnote *buffer;
     Usz count, capacity;
 } Susnote_list;
+
+Oosc_udp_create_error oosc_dev_create_udp(Oosc_dev **out_ptr, char const *dest_addr, char const *dest_port);
+void oosc_dev_destroy(Oosc_dev *dev);
+
+// Send a raw UDP datagram.
+void oosc_send_datagram(Oosc_dev *dev, char const *data, Usz size);
+
+// Send a list/array of 32-bit integers in OSC format to the specified "osc
+// address" (a path like /foo) as a UDP datagram.
+void oosc_send_int32s(Oosc_dev *dev, char const *osc_address, I32 const *vals, Usz count);
 
 void susnote_list_init(Susnote_list *sl);
 void susnote_list_deinit(Susnote_list *sl);
