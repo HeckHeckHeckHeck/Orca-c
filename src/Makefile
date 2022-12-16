@@ -13,10 +13,12 @@ OBJ_MAIN_CLI:=$(EXE_MAIN_CLI).o
 OBJ_MAIN_TUI:=$(EXE_MAIN_TUI).o
 OBJ_MAIN_TEST:=$(EXE_MAIN_TEST).o
 
-SOURCE:=$(wildcard *.c)
+C_SOURCES:=$(wildcard *.c)
+CXX_SOURCES+=$(wildcard *.cc)
 HEADERS:=$(wildcard *.h)
 
-OBJECTS:=$(subst .c,.o,$(SOURCE))
+OBJECTS:=$(subst .c,.o,$(C_SOURCES))
+OBJECTS+=$(subst .cc,.o,$(CXX_SOURCES))
 OBJECTS:=$(filter-out $(OBJ_MAIN_CLI),$(OBJECTS))
 OBJECTS:=$(filter-out $(OBJ_MAIN_TUI),$(OBJECTS))
 OBJECTS:=$(filter-out $(OBJ_MAIN_TEST),$(OBJECTS))
