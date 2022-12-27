@@ -6,8 +6,9 @@
 #include "sysmisc.h"
 #include "term_util.h"
 #include "midi.h"
+#include "net.h"
 
-// many transisitve includes
+// many transitive includes
 #include "ged.h"
 #include "tui.h"
 
@@ -17,6 +18,7 @@
 #define SOKOL_IMPL
 #include "sokol_time.h"
 #undef SOKOL_IMPL
+
 
 
 #define TIME_DEBUG 0
@@ -141,7 +143,7 @@ void main_init(int argc, char **argv)
     int init_grid_dim_y = 25;
     int init_grid_dim_x = 57;
     bool explicit_initial_grid_size = false;
-
+    net_init();
     tui_init(&tui, &ged);
 
     int longindex = 0;
