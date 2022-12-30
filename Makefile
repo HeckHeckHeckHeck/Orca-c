@@ -1,4 +1,4 @@
-.PHONY: all src clean
+.PHONY: all test src clean
 
 all: test src
 
