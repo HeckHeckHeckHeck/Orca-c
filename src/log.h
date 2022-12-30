@@ -16,9 +16,9 @@
 #endif
 
 typedef enum {
-    ORCA_LOG_BACKEND_STDOUT,
-    ORCA_LOG_BACKEND_STDERR,
-    ORCA_LOG_BACKEND_FILE
+    ORCA_LOG_BACKEND_STDOUT = 1,
+    ORCA_LOG_BACKEND_STDERR = 2,
+    ORCA_LOG_BACKEND_FILE = 4
 } ORCA_LOG_BACKEND;
 
 typedef enum {
@@ -63,6 +63,9 @@ typedef enum {
 // config/settings
 void orca_log_level_set(ORCA_LOG_LEVEL level);
 ORCA_LOG_LEVEL orca_log_level_get(void);
+
+void orca_log_backends_set(ORCA_LOG_BACKEND backend);
+ORCA_LOG_BACKEND orca_log_backend_get(void);
 
 void orca_log_logfile_path_set(const char* path);
 void orca_log_logfile_path_get(const char** path);
@@ -120,6 +123,8 @@ namespace Orca {
         ORCA_LOG_COLOR get_color();
 
         namespace Backend {
+            void set_backends(ORCA_LOG_BACKEND backend);
+            ORCA_LOG_BACKEND get_backends();
             namespace Logfile {
                 void set_path(const std::filesystem::path& path);
                 const std::filesystem::path& get_path();

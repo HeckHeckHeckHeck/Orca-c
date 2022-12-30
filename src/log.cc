@@ -34,6 +34,9 @@ namespace Orca {
         std::atomic<ORCA_LOG_LEVEL> _log_level{ ORCA_LOG_LEVEL_NONE };
         std::atomic<ORCA_LOG_COLOR> _log_color{ ORCA_LOG_COLOR_WHITE };
         namespace Backend {
+            std::mutex _mtx_backends{};
+            ORCA_LOG_BACKEND
+            _backends = (ORCA_LOG_BACKEND)(ORCA_LOG_BACKEND_STDOUT | ORCA_LOG_BACKEND_FILE);
             void _dispatcher(std::string_view msg, ORCA_LOG_COLOR col = ORCA_LOG_COLOR_DEFAULT);
             namespace Console {
                 std::mutex _mtx_stdout{};
@@ -67,6 +70,18 @@ extern "C" {
     ORCA_LOG_LEVEL orca_log_level_get(void)
     {
         return Orca::Log::_log_level;
+    }
+
+    void orca_log_backends_set(ORCA_LOG_BACKEND backend)
+    {
+        std::lock_guard<std::mutex> l{ Orca::Log::Backend::_mtx_backends };
+        Orca::Log::Backend::_backends = backend;
+    }
+
+    ORCA_LOG_BACKEND orca_log_backend_get(void)
+    {
+        std::lock_guard<std::mutex> l{ Orca::Log::Backend::_mtx_backends };
+        return Orca::Log::Backend::_backends;
     }
 
     void orca_log_logfile_path_set(const char* path)
@@ -287,10 +302,28 @@ namespace Orca {
         }
 
         namespace Backend {
+            void set_backends(ORCA_LOG_BACKEND backend)
+            {
+                ::orca_log_backends_set(backend);
+            }
+
+            ORCA_LOG_BACKEND get_backends()
+            {
+                return ::orca_log_backend_get();
+            }
+
             void _dispatcher(std::string_view msg, ORCA_LOG_COLOR col)
             {
-                Console::_write_stderr(msg, col);
-                Logfile::_write(msg);
+                std::lock_guard<std::mutex> l{ Orca::Log::Backend::_mtx_backends };
+                if (_backends & ORCA_LOG_BACKEND_STDOUT) {
+                    Console::_write_stdout(msg, col);
+                }
+                if (_backends & ORCA_LOG_BACKEND_STDERR) {
+                    Console::_write_stderr(msg, col);
+                }
+                if (_backends & ORCA_LOG_BACKEND_FILE) {
+                    Logfile::_write(msg);
+                }
             }
 
             namespace Console {
