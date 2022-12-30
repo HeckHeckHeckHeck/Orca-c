@@ -15,6 +15,11 @@
     #define ORCA_LOG_MACRO_FUNCNAME __func__
 #endif
 
+typedef enum {
+    ORCA_LOG_BACKEND_STDOUT,
+    ORCA_LOG_BACKEND_STDERR,
+    ORCA_LOG_BACKEND_FILE
+} ORCA_LOG_BACKEND;
 
 typedef enum {
     ORCA_LOG_LEVEL_NONE = 0, // Logging Disabled
@@ -50,16 +55,23 @@ typedef enum {
 
     #define ORCA_LOG_INFO(...) ORCA_LOG(ORCA_LOG_LEVEL_INFO, __VA_ARGS__)
 
-    #define ORCA_LOG(level, ...)                                                                    \
-        do {                                                                                        \
+    #define ORCA_LOG(level, ...)                                                                     \
+        do {                                                                                         \
             _orca_log_for_macro(level, __FILE__, __LINE__, ORCA_LOG_MACRO_FUNCNAME, "" __VA_ARGS__); \
         } while (0)
 
 // config/settings
-void orca_log_set_level(ORCA_LOG_LEVEL level);
-ORCA_LOG_LEVEL orca_log_get_level();
-void orca_log_set_color(ORCA_LOG_COLOR col);
-ORCA_LOG_COLOR orca_log_get_color();
+void orca_log_level_set(ORCA_LOG_LEVEL level);
+ORCA_LOG_LEVEL orca_log_level_get(void);
+
+void orca_log_logfile_path_set(const char* path);
+void orca_log_logfile_path_get(const char** path);
+
+void orca_log_color_set(ORCA_LOG_COLOR col);
+ORCA_LOG_COLOR orca_log_color_get(void);
+
+void orca_log_logfile_clear_on_open_set(bool clear);
+bool orca_log_logfile_clear_on_open_get(void);
 
 // logging
 void orca_log(const char* msg);
@@ -84,6 +96,7 @@ void _orca_log_for_macro(
 #ifdef __cplusplus
     #include <string>
     #include <sstream>
+    #include <filesystem>
 
     #define ORCA_LOG_ERR(msg) ORCA_LOG(ORCA_LOG_LEVEL_ERROR, msg)
 
@@ -106,11 +119,20 @@ namespace Orca {
         void set_color(ORCA_LOG_COLOR col);
         ORCA_LOG_COLOR get_color();
 
+        namespace Backend {
+            namespace Logfile {
+                void set_path(const std::filesystem::path& path);
+                const std::filesystem::path& get_path();
+                void set_clear_on_open(bool clear);
+                bool get_clear_on_open();
+            } // namespace Logfile
+        }     // namespace Backend
+
         // logging
-        void log(const std::string& msg, ORCA_LOG_COLOR col = ORCA_LOG_COLOR_DEFAULT);
-        void logH1(const std::string& msg, ORCA_LOG_COLOR col = ORCA_LOG_COLOR_DEFAULT);
-        void logH2(const std::string& msg, ORCA_LOG_COLOR col = ORCA_LOG_COLOR_DEFAULT);
-        void logH3(const std::string& msg, ORCA_LOG_COLOR col = ORCA_LOG_COLOR_DEFAULT);
+        void log(std::string_view msg, ORCA_LOG_COLOR col = ORCA_LOG_COLOR_DEFAULT);
+        void logH1(std::string_view msg, ORCA_LOG_COLOR col = ORCA_LOG_COLOR_DEFAULT);
+        void logH2(std::string_view msg, ORCA_LOG_COLOR col = ORCA_LOG_COLOR_DEFAULT);
+        void logH3(std::string_view msg, ORCA_LOG_COLOR col = ORCA_LOG_COLOR_DEFAULT);
 
         // helper function for macro use only
         void _log_for_macro(

@@ -25,6 +25,12 @@ int main()
         ORCA_LOG_INFO("SHOULD NOT SEE THIS");
     }
 
+    // Logfile
+    {
+        std::cout << " LOGFILE PATH: " << Orca::Log::Backend::Logfile::get_path();
+        Orca::Log::Backend::Logfile::set_path("newlogfile.log");
+    }
+
     // BASIC USAGE MACRO
     {
         Orca::Log::set_level(ORCA_LOG_LEVEL_INFO);
@@ -89,6 +95,5 @@ int main()
         ORCA_LOG_ERR("DEFAULT COLOR GREEN");
     }
 
-
-    // FUNCTIONS
+    Orca::Log::log("ALL TEST SUCCESSFUL");
 }

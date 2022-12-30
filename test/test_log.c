@@ -7,26 +7,34 @@
 
 // ORCA LOG C usage
 
-int main()
+int main(void)
 {
     // Test Levels
     {
         ORCA_LOG_ERR("SHOULD NOT SEE THIS");
 
-        orca_log_set_level(ORCA_LOG_LEVEL_ALL);
+        orca_log_level_set(ORCA_LOG_LEVEL_ALL);
         ORCA_LOG_ERR();
         ORCA_LOG_WARN();
         ORCA_LOG_INFO();
 
-        orca_log_set_level(ORCA_LOG_LEVEL_ERROR);
+        orca_log_level_set(ORCA_LOG_LEVEL_ERROR);
         ORCA_LOG_ERR();
         ORCA_LOG_WARN("SHOULD NOT SEE THIS");
         ORCA_LOG_INFO("SHOULD NOT SEE THIS");
     }
 
+    // Logfile
+    {
+        const char *path = NULL;
+        orca_log_logfile_path_get(&path);
+        printf("LOGFILE PATH: %s\n", path);
+        orca_log_logfile_path_set("newlogfile.log");
+    }
+
     // BASIC USAGE MACRO
     {
-        orca_log_set_level(ORCA_LOG_LEVEL_INFO);
+        orca_log_level_set(ORCA_LOG_LEVEL_INFO);
         // no message
         ORCA_LOG_INFO();
 
@@ -44,7 +52,7 @@ int main()
 
     // BASIC USAGE FUNC
     {
-        orca_log_set_level(ORCA_LOG_LEVEL_INFO);
+        orca_log_level_set(ORCA_LOG_LEVEL_INFO);
         // literal
         orca_log("Literal RAW");
 
@@ -62,12 +70,12 @@ int main()
     {
         orca_log_h1("Colors functions only");
         orca_log("DEFAULT COLOR");
-        orca_log_set_color(ORCA_LOG_COLOR_GREEN);
+        orca_log_color_set(ORCA_LOG_COLOR_GREEN);
         orca_log("DEFAULT COLOR AFTER SET GREEN");
-        orca_log_set_color(ORCA_LOG_COLOR_YELLOW);
+        orca_log_color_set(ORCA_LOG_COLOR_YELLOW);
         strdup("YELLOW ONE OFF");
         orca_log(strdup("YELLOW ONE OFF"));
-        orca_log_set_color(ORCA_LOG_COLOR_RESET);
+        orca_log_color_set(ORCA_LOG_COLOR_RESET);
         orca_log("COLOR RESET");
     }
 
@@ -75,11 +83,13 @@ int main()
     {
         orca_log_h1("Colors using Macros");
         orca_log("DEFAULT COLOR");
-        orca_log_set_color(ORCA_LOG_COLOR_GREEN);
+        orca_log_color_set(ORCA_LOG_COLOR_GREEN);
         ORCA_LOG_ERR("DEFAULT COLOR AFTER SET GREEN");
-        orca_log_set_color(ORCA_LOG_COLOR_YELLOW);
+        orca_log_color_set(ORCA_LOG_COLOR_YELLOW);
         ORCA_LOG_ERR("YELLOW ONE OFF");
-        orca_log_set_color(ORCA_LOG_COLOR_RESET);
+        orca_log_color_set(ORCA_LOG_COLOR_RESET);
         ORCA_LOG_ERR("COLOR RESET");
     }
+
+    orca_log("ALL TEST SUCCESSFUL");
 }
