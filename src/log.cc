@@ -4,6 +4,7 @@
 #include <cstdarg>
 #include <unistd.h>
 #include <thread>
+#include <string_view>
 #include <cmath>
 
 //-------------------------------------------------------------------------------------------------
@@ -20,16 +21,16 @@ extern "C" {
 namespace Orca {
     namespace Utils {
         std::string _to_termcol(const ORCA_LOG_COLOR& col);
-        std::string _decorate_three_lines(const std::string& msg, char decoration = '-');
-        std::string _decorate_centered(const std::string& msg, char decoration = '-');
+        std::string _decorate_three_lines(std::string_view msg, char decoration = '-');
+        std::string _decorate_centered(std::string_view msg, char decoration = '-');
     } // namespace Utils
     namespace Log {
-        std::mutex _mtx_raw_log{};
         std::mutex _mtx_log{};
         std::atomic<ORCA_LOG_LEVEL> _log_level{ ORCA_LOG_LEVEL_NONE };
         std::atomic<ORCA_LOG_COLOR> _log_color{ ORCA_LOG_COLOR_WHITE };
         namespace Backend {
-            void _log_stderr(const std::string& msg, ORCA_LOG_COLOR col = ORCA_LOG_COLOR_DEFAULT);
+            void _log_stderr(std::string_view msg, ORCA_LOG_COLOR col = ORCA_LOG_COLOR_DEFAULT);
+            void _log_file(std::string_view msg);
         }
     } // namespace Log
 } // namespace Orca
@@ -116,8 +117,10 @@ extern "C" {
             header << line << " ";
             header << funcname << " ";
             msg = header.str();
-            if (!std::string(msg_fmtd).empty()) {
-                msg += "- " + std::string(msg_fmtd);
+            std::string_view msg_fmtd_cxx{ msg_fmtd };
+            if (!msg_fmtd_cxx.empty()) {
+                msg += "- ";
+                msg += msg_fmtd_cxx;
             }
         }
         free(msg_fmtd);
@@ -186,38 +189,47 @@ namespace Orca {
             ::_orca_log_for_macro(level, file.c_str(), line, funcname.c_str(), "%s", msg.c_str());
         }
 
-        void log(const std::string& msg, ORCA_LOG_COLOR col)
+        void log(std::string_view msg, ORCA_LOG_COLOR col)
         {
             Backend::_log_stderr(msg, col);
         }
 
-        void logH1(const std::string& msg, ORCA_LOG_COLOR col)
+        void logH1(std::string_view msg, ORCA_LOG_COLOR col)
         {
             Backend::_log_stderr(Utils::_decorate_three_lines(msg, '='), col);
         }
 
-        void logH2(const std::string& msg, ORCA_LOG_COLOR col)
+        void logH2(std::string_view msg, ORCA_LOG_COLOR col)
         {
             Backend::_log_stderr("\n" + Utils::_decorate_centered(msg, '='), col);
         }
 
-        void logH3(const std::string& msg, ORCA_LOG_COLOR col)
+        void logH3(std::string_view msg, ORCA_LOG_COLOR col)
         {
             Backend::_log_stderr(Utils::_decorate_centered(msg, '-'), col);
         }
 
         namespace Backend {
             // TODO: add file backend
-            void _log_stderr(const std::string& msg, ORCA_LOG_COLOR col)
+            void _log_stderr(std::string_view msg, ORCA_LOG_COLOR col)
             {
                 std::lock_guard<std::mutex> l{ _mtx_raw_log };
                 std::cerr << Utils::_to_termcol(col) << msg
                           << Utils::_to_termcol(ORCA_LOG_COLOR_RESET)
                           << std::endl; //endl also flushes, but cerr is unbuffered anyways
+                _log_file(msg);
             }
-        }
-    } // namespace Log
 
+            void _log_file(std::string_view msg) {
+                std::lock_guard<std::mutex> l{ _mtx_backend_file };
+                std::filesystem::path path{ "logfile.log" };
+
+                std::ofstream ofs(path);
+                ofs << msg << std::endl;
+                ofs.close();
+            }
+        } // namespace Backend
+    }     // namespace Log
 
 
     namespace Utils {
@@ -251,7 +263,7 @@ namespace Orca {
             }
         }
 
-        std::string _decorate_three_lines(const std::string& msg, char decoration)
+        std::string _decorate_three_lines(std::string_view msg, char decoration)
         {
             std::stringstream tmp;
             tmp << std::string(termsize_x, decoration) << std::endl
@@ -260,12 +272,12 @@ namespace Orca {
             return tmp.str();
         }
 
-        std::string _decorate_centered(const std::string& msg, char decoration)
+        std::string _decorate_centered(std::string_view msg, char decoration)
         {
             std::stringstream tmp;
             size_t max_len = termsize_x - 10;
             // truncate msg
-            std::string msg_truncated = msg;
+            std::string msg_truncated{ msg };
             if (msg.length() >= max_len) {
                 msg_truncated = msg.substr(0, max_len);
                 msg_truncated += "...";
@@ -286,7 +298,7 @@ namespace Orca {
 //-------------------------------------------------------------------------------------------------
 std::ostream& operator<<(std::ostream& o, const ORCA_LOG_LEVEL* level)
 {
-    return o << std::string(_orca_log_level_to_string(level));
+    return o << std::string_view (_orca_log_level_to_string(level));
 }
 
 // Stuff like that would be fucking handy
