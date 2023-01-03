@@ -562,10 +562,10 @@ void tui_init(Tui *tui, Ged *ged)
     tui->osc_port = NULL;
     tui->osc_midi_bidule_path = NULL;
     tui->undo_history_limit = 100;
-    tui->softmargin_y = 4;
-    tui->softmargin_x = 4;
-    tui->hardmargin_y = 8;
-    tui->hardmargin_x = 8;
+    tui->softmargin_y = 1;
+    tui->softmargin_x = 2;
+    tui->hardmargin_y;
+    tui->hardmargin_x;
     tui->prefs_touched = 0;
     tui->use_gui_cboard = true;
     tui->strict_timing = false;
