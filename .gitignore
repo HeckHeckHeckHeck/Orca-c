@@ -30,3 +30,8 @@
 /test/test_main
 /test/test_main2
 /test/test_log
+/test/test_log_cxx
+/test/customfile.log
+/test/newlogfile.log
+/test/orca.log
+/src/orca.log
