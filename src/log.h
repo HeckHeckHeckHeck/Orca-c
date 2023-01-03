@@ -3,12 +3,6 @@
 
 #define ORCA_LOG_FUNCTION_ENTRY 1
 
-//TODO implement compile time max level/disable
-#ifndef ORCA_LOG_LEVEL_MAXIMUM
-    #define ORCA_LOG_LEVEL_MAXIMUM ORCA_LOG_LEVEL_INFO
-#endif
-
-//TODO auto detect via compiler
 #ifdef ORCA_LOG_HAVE_PRETTY_FUNCTION
     #define ORCA_LOG_MACRO_FUNCNAME __PRETTY_FUNCTION__
 #else
