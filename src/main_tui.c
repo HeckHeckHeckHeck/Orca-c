@@ -329,6 +329,9 @@ void main_init(int argc, char **argv)
 
 int main(int argc, char **argv)
 {
+    orca_log_level_set(ORCA_LOG_LEVEL_ALL);
+    orca_log_backends_set(ORCA_LOG_BACKEND_FILE);
+    ORCA_LOG_INFO();
     main_init(argc, argv);
 
     int cur_timeout = 0;
