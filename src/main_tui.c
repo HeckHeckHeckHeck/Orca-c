@@ -7,6 +7,7 @@
 #include "term_util.h"
 #include "midi.h"
 #include "net.h"
+#include "log.h"
 
 // many transitive includes
 #include "ged.h"

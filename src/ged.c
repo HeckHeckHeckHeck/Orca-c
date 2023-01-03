@@ -2,7 +2,6 @@
 #include "gbuffer.h"
 #include "sim.h"
 #include "sokol_time.h"
-#include "ext.hh"
 
 typedef enum
 {
@@ -423,7 +422,7 @@ void clear_and_run_vm(
     mbuffer_clear(mbuf, height, width);
     oevent_list_clear(oevent_list);
     orca_run(gbuf, mbuf, height, width, tick_number, oevent_list, random_seed);
-    test_cxx(gbuf,mbuf,height,width,tick_number);
+//    test_cxx(gbuf,mbuf,height,width,tick_number);
 }
 
 void ged_cursor_move_relative(Ged_cursor *tc, Usz field_h, Usz field_w, Isz delta_y, Isz delta_x)
