@@ -1,19 +1,18 @@
 // This file is under GNU General Public License 3.0
 // see LICENSE.txt
 // clang-format off
-#ifndef ORCA_EXT_HH
-#define ORCA_EXT_HH
+#ifndef ORCA_NET_HH
+#define ORCA_NET_HH
 #include "base.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-void test_cxx(Glyph * gbuf,
-Mark * mbuf,
-Usz height,
-Usz width,
-Usz tick_number);
+
+void net_init(void);
+
+void net_test_cxx(Glyph * gbuf,Mark * mbuf,Usz height,Usz width,Usz tick_number);
 
 
 
@@ -21,4 +20,4 @@ Usz tick_number);
 };
 #endif
 
-#endif //ORCA_EXT_HH
+#endif //ORCA_NET_HH
